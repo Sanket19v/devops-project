@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-app
+  labels: {app: demo-app}
+spec:
+  replicas: 2
+  selector:
+    matchLabels: {app: demo-app}
+  template:
+    metadata:
+      labels: {app: demo-app}
+    spec:
+      containers:
+        - name: app
+          image: demo-app:local
+          imagePullPolicy: IfNotPresent
+          ports:
+            - {name: http, containerPort: 8080}
+          readinessProbe:
+            httpGet: {path: /health, port: http}
+            initialDelaySeconds: 3
+          livenessProbe:
+            httpGet: {path: /health, port: http}
+            initialDelaySeconds: 10
+          resources:
+            requests: {cpu: 50m, memory: 64Mi}
+            limits: {cpu: 250m, memory: 128Mi}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo-app
+  labels: {app: demo-app}
+spec:
+  selector: {app: demo-app}
+  ports:
+    - {name: http, port: 80, targetPort: http}
