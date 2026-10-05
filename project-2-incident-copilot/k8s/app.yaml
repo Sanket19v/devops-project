@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-app
+  labels: {app: demo-app}
+spec:
+  replicas: 2
+  selector:
+    matchLabels: {app: demo-app}
+  template:
+    metadata:
+      labels: {app: demo-app}
+    spec:
+      containers:
+        - name: app
+          image: demo-app:local
+          imagePullPolicy: IfNotPresent
+          ports:
+            - {name: http, containerPort: 8080}
+          readinessProbe:
+            httpGet: {path: /health, port: http}
+            initialDelaySeconds: 3
+          livenessProbe:
+            httpGet: {path: /health, port: http}
+            initialDelaySeconds: 10
+          resources:
+            requests: {cpu: 50m, memory: 64Mi}
+            limits: {cpu: 250m, memory: 128Mi}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo-app
+  labels: {app: demo-app}
+spec:
+  selector: {app: demo-app}
+  ports:
+    - {name: http, port: 80, targetPort: http}
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: demo-app
+  labels: {release: monitoring}
+spec:
+  selector:
+    matchLabels: {app: demo-app}
+  endpoints:
+    - {port: http, path: /metrics, interval: 15s}
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: demo-app-alerts
+  labels: {release: monitoring}
+spec:
+  groups:
+    - name: demo-app
+      rules:
+        - alert: HighErrorRate
+          expr: sum(rate(app_requests_total{status="500"}[1m])) > 0.05
+          for: 30s
+          labels: {severity: critical, app: demo-app, namespace: default}
+          annotations: {summary: "demo-app is returning 5xx errors"}
+        - alert: PodRestarting
+          expr: increase(kube_pod_container_status_restarts_total{pod=~"demo-app.*"}[5m]) > 0
+          for: 10s
+          labels: {severity: warning, app: demo-app, namespace: default}
+          annotations: {summary: "demo-app pod is restarting"}

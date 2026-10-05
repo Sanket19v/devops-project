@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.venv/
+.terraform/
+*.tfstate*
+.env
+p3-cost-optimizer/terraform/optimized.tfvars.json

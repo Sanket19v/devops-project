@@ -1,0 +1,10 @@
+{
+  "instances": [
+    {"id": "i-01", "name": "web-1",   "type": "t3.large",  "cpu_avg": 9.0,  "cpu_max": 35},
+    {"id": "i-02", "name": "api-1",   "type": "t3.medium", "cpu_avg": 55.0, "cpu_max": 90},
+    {"id": "i-03", "name": "batch-1", "type": "t3.xlarge", "cpu_avg": 2.0,  "cpu_max": 8},
+    {"id": "i-04", "name": "dev-1",   "type": "t3.small",  "cpu_avg": 3.5,  "cpu_max": 12}
+  ],
+  "volumes": [{"id": "vol-0a1", "size_gb": 100}, {"id": "vol-0b2", "size_gb": 20}],
+  "snapshots": [{"id": "snap-01", "size_gb": 200, "age_days": 210}, {"id": "snap-02", "size_gb": 50, "age_days": 120}]
+}

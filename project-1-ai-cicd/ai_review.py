@@ -5,7 +5,7 @@ import json, os, re, subprocess, sys
 import requests
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, os.path.join(HERE, ".."))
+sys.path.insert(0, HERE); sys.path.insert(0, os.path.join(HERE, ".."))
 from common.llm import ask, ask_json
 
 MAX_DIFF = 30000
