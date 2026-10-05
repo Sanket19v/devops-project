@@ -130,10 +130,4 @@ flowchart TD
 
 ---
 
-## Recommended Learning Path
 
-Follow the [**10-Week Roadmap**](ROADMAP.md) to progress from local containers to Kubernetes incident automation and cloud FinOps:
-1. **Weeks 1–4**: Project 1 (Docker, GitHub Actions, DevSecOps, Kubernetes Deployment)
-2. **Weeks 5–6**: Project 2 (Prometheus, Grafana, Alertmanager, AI Copilot, Self-Healing)
-3. **Weeks 7–9**: Project 3 (AWS CloudWatch, FinOps, Terraform IaC, Automated Right-Sizing)
-4. **Week 10**: Portfolio polish, demo videos, and technical writeups
