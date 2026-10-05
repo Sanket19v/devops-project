@@ -1,4 +1,4 @@
-name: ci-cd
+﻿name: ci-cd
 
 on:
   pull_request:
@@ -89,6 +89,11 @@ jobs:
         env:
           KUBE_CONFIG_B64: ${{ secrets.KUBE_CONFIG_B64 }}
         run: |
+          if [ -z "$KUBE_CONFIG_B64" ]; then
+            echo "⚠️ KUBE_CONFIG_B64 secret is not configured in GitHub Secrets."
+            echo "Skipping live Kubernetes cluster deployment. To enable live deployment, add your base64-encoded kubeconfig to GitHub Repo Settings -> Secrets -> Actions."
+            exit 0
+          fi
           echo "$KUBE_CONFIG_B64" | base64 -d > "$HOME/kubeconfig"
           export KUBECONFIG="$HOME/kubeconfig"
           IMAGE="ghcr.io/${GITHUB_REPOSITORY,,}/demo-app:${{ github.sha }}"
